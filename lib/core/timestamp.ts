@@ -176,10 +176,12 @@ export function parseTimestamp(timestampString: string): number | null {
       return parsed;
     }
     
-    // Try parsing as ISO 8601 date
-    const dateMs = Date.parse(timestampString);
-    if (!isNaN(dateMs)) {
-      return toUnixTimestamp(dateMs);
+    // Try parsing as ISO 8601 date (must have date-like format YYYY-MM-DD or contains T)
+    if (/^\d{4}-\d{2}-\d{2}/.test(timestampString) || timestampString.includes('T')) {
+      const dateMs = Date.parse(timestampString);
+      if (!isNaN(dateMs)) {
+        return toUnixTimestamp(dateMs);
+      }
     }
     
     // Could not parse timestamp
