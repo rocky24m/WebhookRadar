@@ -1,0 +1,64 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "webhook-verifier",
+  "version": "1.0.0",
+  "description": "Reusable Kiro Power providing timing-safe HMAC-SHA256 signature verification, replay attack prevention, and schema auditing for GitHub, Stripe, Slack, and Shopify webhooks.",
+  "author": {
+    "name": "rocky24m",
+    "url": "https://github.com/rocky24m"
+  },
+  "keywords": [
+    "webhook",
+    "security",
+    "hmac",
+    "crypto",
+    "stripe",
+    "github",
+    "slack",
+    "shopify",
+    "replay-protection",
+    "timing-safe",
+    "signature-verification",
+    "api-security"
+  ],
+  "homepage": "https://github.com/rocky24m/WebhookRadar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rocky24m/WebhookRadar.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "kiro": ">=1.0.0"
+  },
+  "capabilities": [
+    "skills",
+    "mcp-servers"
+  ],
+  "skills": [
+    {
+      "name": "verify-webhook",
+      "description": "Audit and verify incoming webhook signatures with timing-safe operations and replay attack prevention",
+      "path": "skills/verify-webhook/SKILL.md"
+    }
+  ],
+  "mcpServers": {
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "description": "Fetch official webhook documentation from provider APIs for verification"
+    }
+  },
+  "dependencies": {},
+  "tags": [
+    "security",
+    "cryptography",
+    "webhooks",
+    "api"
+  ]
+}
