@@ -603,48 +603,38 @@ export async function POST(request: NextRequest) {
 
 ### Phase 5: HTTP Route Handlers (app/api/webhooks/)
 
-**Milestone 5.1: GitHub Webhook Endpoint** ✅  
-**Files:** `app/api/webhooks/github/route.ts`
+**Milestone 5.1: Multi-Provider Webhook Ingress Endpoint** ✅  
+**Files:** `app/api/webhooks/[provider]/route.ts`
 
-- [ ] Implement `POST` handler
-- [ ] Extract `X-Hub-Signature-256` header
-- [ ] Read raw body as Buffer
-- [ ] Call `verifyGitHubWebhook()` adapter
-- [ ] Log verification attempt with redacted data
-- [ ] Return appropriate HTTP status codes (400/401/500/200)
-- [ ] Return generic error messages (no sensitive data)
+- [x] Implement dynamic `POST` handler for all providers (GitHub, Stripe, Slack, Shopify)
+- [x] Extract provider-specific headers with case-insensitivity
+- [x] Read raw body as Buffer to prevent mutation before HMAC checking
+- [x] Call unified `verifyWebhook()` dispatcher
+- [x] Log verification attempt with sanitized diagnostic data
+- [x] Return appropriate HTTP status codes (200 OK / 400 Bad Request / 401 Unauthorized)
+- [x] Return generic error messages with zero secret leakage
 
-**Milestone 5.2: Stripe Webhook Endpoint** ✅  
-**Files:** `app/api/webhooks/stripe/route.ts`
+**Milestone 5.2: Live Webhook Simulation Endpoint** ✅  
+**Files:** `app/api/simulate/route.ts`
 
-- [ ] Implement `POST` handler
-- [ ] Extract `Stripe-Signature` header
-- [ ] Read raw body as Buffer
-- [ ] Call `verifyStripeWebhook()` adapter
-- [ ] Handle timestamp validation errors separately
-- [ ] Log verification attempt
-- [ ] Return appropriate HTTP status codes
+- [x] Implement simulation POST endpoint for dashboard testing
+- [x] Support scenarios: `valid`, `tampered_signature`, `replay_attack`, `corrupted_payload`
+- [x] Calculate authentic provider HMAC signatures for realistic test verification
+- [x] Return real-time execution latency and sanitized diagnostic details
 
-**Milestone 5.3: Slack Webhook Endpoint** ✅  
-**Files:** `app/api/webhooks/slack/route.ts`
+---
 
-- [ ] Implement `POST` handler
-- [ ] Extract `X-Slack-Signature` and `X-Slack-Request-Timestamp` headers
-- [ ] Read raw body as Buffer
-- [ ] Call `verifySlackWebhook()` adapter
-- [ ] Handle Slack URL verification challenge
-- [ ] Log verification attempt
-- [ ] Return appropriate HTTP status codes
+### Phase 6: Interactive Dashboard & UI (app/)
 
-**Milestone 5.4: Shopify Webhook Endpoint** ✅  
-**Files:** `app/api/webhooks/shopify/route.ts`
+**Milestone 6.1: Real-Time Security Gateway Dashboard** ✅  
+**Files:** `app/page.tsx`, `app/layout.tsx`
 
-- [ ] Implement `POST` handler
-- [ ] Extract `X-Shopify-Hmac-SHA256` and `X-Shopify-Webhook-Timestamp` headers
-- [ ] Read raw body as Buffer
-- [ ] Call `verifyShopifyWebhook()` adapter
-- [ ] Log verification attempt
-- [ ] Return appropriate HTTP status codes
+- [x] Implement dark-mode operations dashboard
+- [x] Live interactive webhook simulator with provider tabs (Stripe, GitHub, Slack, Shopify)
+- [x] 4 one-click scenario triggers (Valid, Tampered Signature, Replay Attack, Corrupted Byte)
+- [x] Real-time diagnostic viewer showing constant-time check and timestamp drift
+- [x] Chronological security audit log table
+- [x] Architecture showcase for Specs, Property-Based Tests, Custom Agents, and Kiro Power
 
 ---
 
