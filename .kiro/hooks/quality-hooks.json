@@ -1,0 +1,23 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Lint on TypeScript Save",
+      "trigger": "PostFileSave",
+      "matcher": "\\.(ts|tsx)$",
+      "action": {
+        "type": "command",
+        "command": "npx eslint --fix"
+      }
+    },
+    {
+      "name": "Run Invariant Tests on Core Logic",
+      "trigger": "PostFileSave",
+      "matcher": "lib/core/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "npm test -- tests/property"
+      }
+    }
+  ]
+}
