@@ -167,23 +167,36 @@ export function getTimestampDrift(
  */
 export function parseTimestamp(timestampString: string): number | null {
   try {
-    // Try parsing as integer (Unix timestamp in seconds)
-    const parsed = parseInt(timestampString, 10);
-    
-    // Validate that it's a reasonable Unix timestamp
-    // (between year 2000 and year 2100)
-    if (parsed >= 946684800 && parsed <= 4102444800) {
-      return parsed;
+    const trimmed = timestampString.trim();
+
+    // Pure digits: Unix timestamp in seconds or milliseconds
+    if (/^\d+$/.test(trimmed)) {
+      const parsed = parseInt(trimmed, 10);
+      
+      // If within seconds range [2000-01-01, 2100-01-01]
+      if (parsed >= 946684800 && parsed <= 4102444800) {
+        return parsed;
+      }
+      
+      // If within milliseconds range [2000-01-01 ms, 2100-01-01 ms]
+      if (parsed >= 946684800000 && parsed <= 4102444800000) {
+        return toUnixTimestamp(parsed);
+      }
+
+      return null;
     }
-    
-    // Try parsing as ISO 8601 date (must have date-like format YYYY-MM-DD or contains T)
-    if (/^\d{4}-\d{2}-\d{2}/.test(timestampString) || timestampString.includes('T')) {
-      const dateMs = Date.parse(timestampString);
+
+    // ISO 8601 date: must start with YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
+      const dateMs = Date.parse(trimmed);
       if (!isNaN(dateMs)) {
-        return toUnixTimestamp(dateMs);
+        const sec = toUnixTimestamp(dateMs);
+        if (sec >= 946684800 && sec <= 4102444800) {
+          return sec;
+        }
       }
     }
-    
+
     // Could not parse timestamp
     return null;
   } catch (error) {
