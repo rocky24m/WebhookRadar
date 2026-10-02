@@ -73,7 +73,7 @@ export default function Dashboard() {
       provider: 'stripe',
       scenario: 'valid',
       valid: true,
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: '14:00:00',
       latencyMs: 0.184,
       drift: 0,
     },
@@ -82,7 +82,7 @@ export default function Dashboard() {
       provider: 'github',
       scenario: 'tampered_signature',
       valid: false,
-      timestamp: new Date(Date.now() - 30000).toLocaleTimeString(),
+      timestamp: '13:59:30',
       latencyMs: 0.215,
       reason: 'Signature mismatch (tampered byte rejected)',
     },
@@ -421,7 +421,7 @@ export default function Dashboard() {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-slate-400">{log.timestamp}</td>
+                    <td className="py-3 px-4 text-slate-400" suppressHydrationWarning>{log.timestamp}</td>
                     <td className="py-3 px-4 text-cyan-400">{log.latencyMs} ms</td>
                     <td className="py-3 px-4 text-slate-400 truncate max-w-xs">{log.reason || 'Verified'}</td>
                   </tr>
