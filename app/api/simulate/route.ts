@@ -161,6 +161,25 @@ export async function POST(request: NextRequest) {
       secret,
     });
 
+    // Log to SQLite security audit ledger
+    try {
+      const { logWebhookToDb } = await import('@/lib/db');
+      logWebhookToDb({
+        id: `sim_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+        provider,
+        scenario,
+        valid: result.valid,
+        statusCode: result.valid ? 200 : scenario === 'replay_attack' ? 400 : 401,
+        latencyMs,
+        timestampDrift: result.timestampDrift,
+        reason: result.reason,
+        headersJson: JSON.stringify(headers),
+        payloadSnippet: payloadString.slice(0, 300),
+      });
+    } catch (e) {
+      // Non-blocking logging
+    }
+
     return NextResponse.json({
       scenario,
       provider,

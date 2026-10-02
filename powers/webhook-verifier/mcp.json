@@ -1,14 +1,21 @@
 {
   "mcpServers": {
+    "sqlite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sqlite",
+        "--db-path",
+        "data/webhooks.db"
+      ],
+      "disabled": false
+    },
     "fetch": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-fetch"
       ],
-      "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      },
       "disabled": false
     }
   }

@@ -69,13 +69,30 @@ export async function POST(
       secret,
     });
 
-    if (!result.valid) {
-      const statusCode = result.reason?.toLowerCase().includes('missing')
-        ? 400
-        : result.reason?.toLowerCase().includes('replay') || result.reason?.toLowerCase().includes('timestamp')
-        ? 400
-        : 401;
+    const statusCode = !result.valid
+      ? (result.reason?.toLowerCase().includes('missing') || result.reason?.toLowerCase().includes('replay') || result.reason?.toLowerCase().includes('timestamp') ? 400 : 401)
+      : 200;
 
+    // Log to SQLite security audit ledger
+    try {
+      const { logWebhookToDb } = await import('@/lib/db');
+      logWebhookToDb({
+        id: `evt_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+        provider: providerLower,
+        scenario: 'live_ingress',
+        valid: result.valid,
+        statusCode,
+        latencyMs,
+        timestampDrift: result.timestampDrift,
+        reason: result.reason,
+        headersJson: JSON.stringify(headersRecord),
+        payloadSnippet: rawBody.toString('utf-8').slice(0, 300),
+      });
+    } catch (e) {
+      // Non-blocking logging
+    }
+
+    if (!result.valid) {
       return NextResponse.json(
         {
           ...result,
