@@ -1,10 +1,9 @@
 {
   "mcpServers": {
     "sqlite": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-sqlite",
+        "scripts/mcp-sqlite-server.mjs",
         "--db-path",
         "data/webhooks.db"
       ],
